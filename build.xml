@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<project name="jeneric-functions" default="root-jar">
+
+  <property name="lib.dir" location="lib" />
+  <property name="src.dir" location="src" />
+  <property name="build.dir" location="build" />
+  <property name="dist.dir" location="dist" />
+
+  <property name="main.src.dir" location="${src.dir}/main" />
+  <property name="main.classes.dir" location="${build.dir}/main" />
+
+  <property name="test.src.dir" location="${src.dir}/test" />
+  <property name="test.classes.dir" location="${build.dir}/test" />
+  <property name="test.reports.dir" location="test-output" />
+
+  <property name="imposed.project.name" value="genericFunctions" />
+  <property name="normal.jar.name" value="${imposed.project.name}.jar" />
+  <property name="extended.jar.name" value="${imposed.project.name}Extended.jar"
+  />
+  <property name="dist.both.jar" location="${dist.dir}/${normal.jar.name}" />
+  <property name="dist.extended.jar"
+            location="${dist.dir}/${extended.jar.name}"
+  />
+
+  <property name="release.zip" value="project.zip" />
+  <property name="zip.prefix.dir" value="g05" />
+  <property name="slides.pdf" location="p2.pdf" />
+
+
+  <path id="classpath">
+    <pathelement location="${main.classes.dir}" />
+  </path>
+
+  <path id="test.compile.classpath">
+    <path refid="classpath" />
+    <pathelement location="${lib.dir}/junit.jar" />
+    <pathelement location="${test.classes.dir}" />
+  </path>
+
+  <path id="test.run.classpath">
+    <path refid="test.compile.classpath" />
+    <pathelement location="${lib.dir}/hamcrest-core.jar" />
+  </path>
+
+
+  <!-- =================================================================== -->
+  <!-- Compilation                                                         -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="compile-main" />
+
+  <target name="compile-main" depends="init-main">
+    <javac srcdir="${main.src.dir}"
+           destdir="${main.classes.dir}"
+           includeantruntime="false">
+      <classpath refid="classpath" />
+    </javac>
+  </target>
+
+  <target name="compile-test" depends="compile-main, init-test">
+    <javac srcdir="${test.src.dir}"
+           destdir="${test.classes.dir}"
+           includeantruntime="false">
+      <classpath refid="test.compile.classpath" />
+    </javac>
+  </target>
+
+	<target name="jar" depends="jar-both" />
+
+  <target name="jar-both" depends="init-jar, compile-main">
+    <jar destfile="${dist.both.jar}" basedir="${main.classes.dir}" />
+  </target>
+	
+	<target name="jar-extended" depends="jar-both">
+	  <jar destfile="${dist.extended.jar}">
+	    <zipfileset src="${dist.both.jar}" />
+	  </jar>
+	</target>
+
+
+  <!-- =================================================================== -->
+  <!-- Release                                                             -->
+  <!-- =================================================================== -->
+  <target name="root-jar" depends="jar-both">
+    <copy file="${dist.both.jar}" todir="." />
+  </target>
+
+  <target name="release">
+    <zip destfile="${release.zip}">
+      <zipfileset dir="." includes="lib/**/*" prefix="${zip.prefix.dir}" />
+      <zipfileset dir="." includes="src/**/*" prefix="${zip.prefix.dir}" />
+      <zipfileset dir="." includes="build.xml" prefix="${zip.prefix.dir}" />
+      <zipfileset dir="." includes="${slides.pdf}" prefix="${zip.prefix.dir}" />
+    </zip>
+  </target>
+
+  <target name="zip" depends="release" />
+
+  <!-- =================================================================== -->
+  <!-- Testing                                                             -->
+  <!-- =================================================================== -->
+  <target name="test" depends="init-test-reports, compile-test">
+    <junit printsummary="yes" haltonfailure="no">
+      <classpath refid="test.run.classpath" />
+
+      <batchtest fork="yes" todir="${test.reports.dir}">
+        <fileset dir="${test.src.dir}" />
+      </batchtest>
+    </junit>
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Build preparation and cleaning                                      -->
+  <!-- =================================================================== -->
+  <target name="clean"
+          depends="clean-main,
+                   clean-release,
+                   clean-jar,
+                   clean-test,
+                   clean-test-reports">
+    <delete dir="${build.dir}" />
+    <delete dir="${dist.dir}" />
+  </target>
+
+
+  <target name="init-main">
+    <mkdir dir="${main.classes.dir}" />
+  </target>
+
+  <target name="clean-main">
+    <delete dir="${main.classes.dir}" />
+  </target>
+
+
+  <target name="init-jar">
+    <mkdir dir="${dist.dir}" />
+  </target>
+
+  <target name="clean-jar">
+    <delete file="${dist.both.jar}" />
+  </target>
+
+
+  <target name="init-release" />
+
+  <target name="clean-release">
+    <delete file="${normal.jar.name}" />
+  	<delete file="${extended.jar.name}" />
+    <delete file="${release.zip}" />
+  </target>
+
+
+  <target name="init-test">
+    <mkdir dir="${test.classes.dir}" />
+  </target>
+
+  <target name="clean-test">
+    <delete dir="${test.classes.dir}" />
+  </target>
+
+
+  <target name="init-test-reports">
+    <mkdir dir="${test.reports.dir}" />
+  </target>
+
+  <target name="clean-test-reports">
+    <delete dir="${test.reports.dir}" />
+  </target>
+</project>
