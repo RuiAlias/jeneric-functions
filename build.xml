@@ -102,6 +102,8 @@
     <junit printsummary="yes" haltonfailure="no">
       <classpath refid="test.run.classpath" />
 
+      <formatter type="plain" />
+
       <batchtest fork="yes" todir="${test.reports.dir}">
         <fileset dir="${test.src.dir}" />
       </batchtest>
