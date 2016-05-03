@@ -48,11 +48,11 @@
   <!-- =================================================================== -->
   <target name="compile" depends="compile-main" />
 
-  <target name="compile-main" depends="init-main">
+  <target name="compile-main" depends="clean-main, init-main">
     <javac srcdir="${main.src.dir}"
            destdir="${main.classes.dir}"
            includeantruntime="false">
-      <classpath refid="classpath" />
+      <!-- <classpath refid="classpath" /> -->
     </javac>
   </target>
 
