@@ -2,9 +2,8 @@ package ist.meic.pa.GenericFunctions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class GFMethod {
   public Object dynamicCall(Object... args) {
@@ -25,7 +24,7 @@ public class GFMethod {
   }
 
   protected boolean isApplicable(Object... args) {
-    System.out.println("isApplicable("+Arrays.deepToString(args)+")");
+    // System.out.println("isApplicable(" + Arrays.deepToString(args) + ")");
 
     Class<?>[] parameterTypes = getParameterTypes();
 
@@ -39,51 +38,44 @@ public class GFMethod {
       }
     }
 
-    System.out.println("it is applicable");
-
     return true;
   }
 
-  protected int compareToGivenArgs(GFMethod other, Object... args) {
-    System.out.println("compareTo - other:"+other+"\targs:"+Arrays.deepToString(args));
+  protected int compareTo(GFMethod other) {
+    // System.out.println("compareTo: this(" + parametersToString() + ")\tother("
+    //     + other.parametersToString() + ")");
 
-    List<Integer> thisDistances = distanceToArgs(args);
-    List<Integer> otherDistances = other.distanceToArgs(args);
+    Class<?>[] thisParameterTypes = getParameterTypes();
+    Class<?>[] otherParameterTypes = other.getParameterTypes();
 
-    for (int i = 0; i < thisDistances.size(); i++) {
-      int diff = thisDistances.get(i) - otherDistances.get(i);
-      if (diff != 0) {
-        return diff;
+    assert (thisParameterTypes.length == otherParameterTypes.length);
+
+    for (int i = 0; i < thisParameterTypes.length; i++) {
+      boolean moreSpecific =
+          otherParameterTypes[i].isAssignableFrom(thisParameterTypes[i]);
+      boolean lessSpecific =
+          thisParameterTypes[i].isAssignableFrom(otherParameterTypes[i]);
+
+      if (moreSpecific && lessSpecific) {
+        continue;
+      } else if (moreSpecific) {
+        // System.out.println("this is more specific on #" + i);
+        return -1;
+      } else if (lessSpecific) {
+        // System.out.println("this is less specific on #" + i);
+        return 1;
+      } else {
+        assert (false);
       }
     }
+
+    System.out.println("Equally specific!!");
 
     return 0;
   }
 
-  protected List<Integer> distanceToArgs(Object... args) {
-    System.out.println("distanceToArgs("+Arrays.deepToString(args)+")");
-
-    Class<?>[] parameterTypes = getParameterTypes();
-
-    List<Integer> distances = new ArrayList<Integer>(args.length);
-
-    for (int i = 0; i < parameterTypes.length; i++) {
-      distances.add(typeDistance(args[i].getClass(), parameterTypes[i]));
-    }
-
-    return distances;
-  }
-
-  private int typeDistance(Class<?> subType, Class<?> superType) {
-    System.out.println("typeDistance("+subType+", "+superType+")");
-
-    int distance = 0;
-
-    while (subType != superType) {
-      subType = subType.getSuperclass();
-      distance++;
-    }
-
-    return distance;
+  private String parametersToString() {
+    return Arrays.stream(getParameterTypes()).map(Class::getSimpleName)
+        .collect(Collectors.joining(", "));
   }
 }

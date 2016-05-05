@@ -1,6 +1,5 @@
 package ist.meic.pa.GenericFunctions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,18 +34,18 @@ public class GenericFunction {
   public Object call(Object... args) {
     beforeMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      .sorted((gfm1, gfm2) -> gfm1.compareToGivenArgs(gfm2, args))
+      .sorted((gfm1, gfm2) -> gfm1.compareTo(gfm2))
       .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     Object bestMethodReturn = primaryMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      .min((gfm1, gfm2) -> gfm1.compareToGivenArgs(gfm2, args))
+      .min((gfm1, gfm2) -> gfm1.compareTo(gfm2))
       .orElseThrow(() -> generateNoApplicableMethodsException(args))
       .dynamicCall(args);
 
     afterMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      .sorted((gfm1, gfm2) -> -gfm1.compareToGivenArgs(gfm2, args))
+      .sorted((gfm1, gfm2) -> -gfm1.compareTo(gfm2))
       .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     return bestMethodReturn;
@@ -58,7 +57,8 @@ public class GenericFunction {
     final String types = "TODO";
     final String message =
         String.format(NO_APPLICABLE_METHODS, this.name, arguments, types);
-    System.out.println("Exception message: " + message);
+
+    // System.out.println("Exception message: " + message);
 
     return new IllegalArgumentException(message);
   }
