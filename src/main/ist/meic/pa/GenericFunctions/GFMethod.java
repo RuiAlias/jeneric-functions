@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class GFMethod {
+public class GFMethod implements Comparable<GFMethod> {
   public Object dynamicCall(Object... args) {
     try {
       return getMethod().invoke(this, args);
@@ -41,7 +41,9 @@ public class GFMethod {
     return true;
   }
 
-  protected int compareTo(GFMethod other) {
+  @Override
+  public int compareTo(GFMethod other) {
+    System.out.println("GFMethod::compareTo");
     // System.out.println("compareTo: this(" + parametersToString() + ")\tother("
     //     + other.parametersToString() + ")");
 
@@ -56,6 +58,8 @@ public class GFMethod {
       boolean lessSpecific =
           thisParameterTypes[i].isAssignableFrom(otherParameterTypes[i]);
 
+      System.out.println("compareTo moreSpecific?"+moreSpecific+"\tlessSpecific?"+lessSpecific);
+
       if (moreSpecific && lessSpecific) {
         continue;
       } else if (moreSpecific) {
@@ -65,7 +69,7 @@ public class GFMethod {
         // System.out.println("this is less specific on #" + i);
         return 1;
       } else {
-        assert (false);
+        assert(false);
       }
     }
 
@@ -77,5 +81,25 @@ public class GFMethod {
   private String parametersToString() {
     return Arrays.stream(getParameterTypes()).map(Class::getSimpleName)
         .collect(Collectors.joining(", "));
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    System.out.println("GFMethod::equals");
+    if (!(obj instanceof GFMethod)) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
+
+    return Arrays.equals(getParameterTypes(), ((GFMethod)obj).getParameterTypes());
+  }
+
+  @Override
+  public int hashCode() {
+    System.out.println("GFMethod::hashCode");
+
+    return Arrays.hashCode(getParameterTypes());
   }
 }

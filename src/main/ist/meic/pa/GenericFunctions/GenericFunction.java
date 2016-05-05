@@ -1,51 +1,72 @@
 package ist.meic.pa.GenericFunctions;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class GenericFunction {
   final private String name;
-  private Collection<GFMethod> primaryMethods;
-  private Collection<GFMethod> beforeMethods;
-  private Collection<GFMethod> afterMethods;
+  private SortedSet<GFMethod> primaryMethods;
+  private SortedSet<GFMethod> beforeMethods;
+  private SortedSet<GFMethod> afterMethods;
   private static final String NO_APPLICABLE_METHODS =
       "No methods for generic function %s with args %s of classes %s";
 
   public GenericFunction(String name) {
     this.name = name;
-    this.primaryMethods = new HashSet<GFMethod>();
-    this.beforeMethods = new HashSet<GFMethod>();
-    this.afterMethods = new HashSet<GFMethod>();
+    this.primaryMethods = new TreeSet<GFMethod>();
+    this.beforeMethods = new TreeSet<GFMethod>();
+    this.afterMethods = new TreeSet<GFMethod>((gfm1, gfm2) -> -gfm1.compareTo(gfm2));
   }
 
   public void addMethod(GFMethod gfMethod) {
+    System.out.println("Vou fazer contains");
+    boolean contains = this.primaryMethods.contains(gfMethod);
+    System.out.println("Terminei contains");
+
+    if (contains) {
+      this.primaryMethods.remove(gfMethod);
+      System.out.println("Actualizei o método");
+    }
+
+    System.out.println("Vou adicionar");
     this.primaryMethods.add(gfMethod);
   }
 
   public void addBeforeMethod(GFMethod gfMethod) {
+    if (this.beforeMethods.contains(gfMethod)) {
+      this.beforeMethods.remove(gfMethod);
+      System.out.println("Actualizei o método");
+    }
+
     this.beforeMethods.add(gfMethod);
   }
 
   public void addAfterMethod(GFMethod gfMethod) {
+    if (this.afterMethods.contains(gfMethod)) {
+      this.afterMethods.remove(gfMethod);
+      System.out.println("Actualizei o método");
+    }
+
     this.afterMethods.add(gfMethod);
   }
 
   public Object call(Object... args) {
     beforeMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      .sorted((gfm1, gfm2) -> gfm1.compareTo(gfm2))
+      // .sorted((gfm1, gfm2) -> gfm1.compareTo(gfm2))
       .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     Object bestMethodReturn = primaryMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      .min((gfm1, gfm2) -> gfm1.compareTo(gfm2))
+      .findFirst()
+      // .min((gfm1, gfm2) -> gfm1.compareTo(gfm2))
       .orElseThrow(() -> generateNoApplicableMethodsException(args))
       .dynamicCall(args);
 
     afterMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      .sorted((gfm1, gfm2) -> -gfm1.compareTo(gfm2))
+      // .sorted((gfm1, gfm2) -> -gfm1.compareTo(gfm2))
       .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     return bestMethodReturn;
