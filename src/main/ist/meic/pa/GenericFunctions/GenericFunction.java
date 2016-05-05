@@ -54,12 +54,22 @@ public class GenericFunction {
   private IllegalArgumentException generateNoApplicableMethodsException(
       Object... args) {
     final String arguments = Arrays.deepToString(args);
-    final String types = "TODO";
+    final String types = Arrays.deepToString(argsTypes(args));
     final String message =
         String.format(NO_APPLICABLE_METHODS, this.name, arguments, types);
 
     // System.out.println("Exception message: " + message);
 
     return new IllegalArgumentException(message);
+  }
+
+  private static Class<?>[] argsTypes(Object[] args) {
+    Class<?>[] types = new Class<?>[args.length];
+
+    for (int i = 0; i < args.length; i++) {
+      types[i] = args[i].getClass();
+    }
+
+    return types;
   }
 }
