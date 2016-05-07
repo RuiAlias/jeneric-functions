@@ -31,18 +31,17 @@ public class GenericFunction {
 
   public Object call(Object... args) {
     beforeMethods.stream()
-      .filter(gfm -> gfm.isApplicable(args))
-      .forEachOrdered((gfm) -> gfm.dynamicCall(args));
+        .filter(gfm -> gfm.isApplicable(args))
+        .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     Object bestMethodReturn = primaryMethods.stream()
-      .filter(gfm -> gfm.isApplicable(args))
-      .findFirst()
-      .orElseThrow(() -> generateNoApplicableMethodsException(args))
-      .dynamicCall(args);
+        .filter(gfm -> gfm.isApplicable(args)).findFirst()
+        .orElseThrow(() -> generateNoApplicableMethodsException(args))
+        .dynamicCall(args);
 
     afterMethods.stream()
-      .filter(gfm -> gfm.isApplicable(args))
-      .forEachOrdered((gfm) -> gfm.dynamicCall(args));
+        .filter(gfm -> gfm.isApplicable(args))
+        .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     return bestMethodReturn;
   }
@@ -53,8 +52,6 @@ public class GenericFunction {
     final String types = Arrays.deepToString(argsTypes(args));
     final String message =
         String.format(NO_APPLICABLE_METHODS, this.name, arguments, types);
-
-    // System.out.println("Exception message: " + message);
 
     return new IllegalArgumentException(message);
   }
