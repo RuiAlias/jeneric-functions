@@ -16,7 +16,10 @@ public class GFMethod implements Comparable<GFMethod> {
   }
 
   private Method getMethod() {
-    return getClass().getDeclaredMethods()[0];
+    Method m = getClass().getDeclaredMethods()[0];
+    m.setAccessible(true);
+
+    return m;
   }
 
   protected Class<?>[] getParameterTypes() {
