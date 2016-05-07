@@ -39,7 +39,7 @@ public class GFMethodTest {
   }
 
   @Test
-  public void testEquals() {
+  public void shouldReturn0WhenComparingEqualMethods() {
     GFMethod gfm1 = new GFMethod() {
         public Object call(Object o, A a, C c) {
           return null;
@@ -52,15 +52,12 @@ public class GFMethodTest {
         }
       };
 
-    assertEquals(gfm1, gfm2);
-    assertEquals("Hashcode", gfm1.hashCode(), gfm2.hashCode());
-    assertNotSame(gfm1, gfm2);
     assertEquals(0, gfm1.compareTo(gfm2));
     assertEquals(0, gfm2.compareTo(gfm1));
   }
 
   @Test
-  public void testDifferent() {
+  public void shouldReturnDifferentWhenMethodsAreUnrelated1() {
     GFMethod gfm1 = new GFMethod() {
         public Object call(Object o, A a, C c) {
           return null;
@@ -73,17 +70,11 @@ public class GFMethodTest {
         }
       };
 
-    assertNotEquals(gfm1, gfm2);
-    assertNotEquals(gfm1.hashCode(), gfm2.hashCode());
-    assertNotSame(gfm1, gfm2);
-    System.out.println("qweqweqwe "+gfm1.compareTo(gfm2));
-
-    assertTrue("compareTo > 0", gfm1.compareTo(gfm2) > 0);
-    assertTrue("compareTo < 0", gfm2.compareTo(gfm1) < 0);
+    testUnrelatedMethods(gfm1, gfm2);
   }
 
   @Test
-  public void testDifferent2() {
+  public void shouldReturnDifferentWhenMethodsAreUnrelated2() {
     GFMethod gfm1 = new GFMethod() {
         public Object call(Integer a, Integer b) {
           return a + b;
@@ -96,15 +87,7 @@ public class GFMethodTest {
         }
       };
 
-    assertNotEquals(gfm1, gfm2);
-    assertNotEquals(gfm2, gfm1);
-    assertNotEquals(gfm1.hashCode(), gfm2.hashCode());
-    assertNotEquals(gfm2.hashCode(), gfm1.hashCode());
-    assertNotSame(gfm1, gfm2);
-    assertNotSame(gfm2, gfm1);
-    System.out.println("asdasdasd "+gfm1.compareTo(gfm2));
-    assertTrue("compareTo < 0", gfm1.compareTo(gfm2) < 0);
-    assertTrue("compareTo > 0", gfm2.compareTo(gfm1) > 0);
+    testUnrelatedMethods(gfm1, gfm2);
   }
 
   @Test
@@ -115,9 +98,21 @@ public class GFMethodTest {
         }
       };
 
-    assertEquals(gfm1, gfm1);
-    assertEquals("Hashcode", gfm1.hashCode(), gfm1.hashCode());
-    assertSame(gfm1, gfm1);
     assertEquals(0, gfm1.compareTo(gfm1));
+  }
+
+
+  private void testUnrelatedMethods(GFMethod gfm1, GFMethod gfm2) {
+    int diff1 = gfm1.compareTo(gfm2);
+    int diff2 = gfm2.compareTo(gfm1);
+
+    assertNotEquals(0, diff1);
+    assertNotEquals(0, diff2);
+
+    if (diff1 > 0) {
+      assertTrue(diff2 < 0);
+    } else {
+      assertTrue(diff2 > 0);
+    }
   }
 }

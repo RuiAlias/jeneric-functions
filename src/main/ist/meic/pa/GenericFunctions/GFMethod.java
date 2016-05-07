@@ -43,63 +43,52 @@ public class GFMethod implements Comparable<GFMethod> {
 
   @Override
   public int compareTo(GFMethod other) {
-    System.out.println("GFMethod::compareTo");
-    // System.out.println("compareTo: this(" + parametersToString() + ")\tother("
-    //     + other.parametersToString() + ")");
+    // System.out.println("GFMethod::compareTo - this(" + debugParametersToString()
+    //                    + ")\tother(" + other.debugParametersToString() + ")");
 
     Class<?>[] thisParameterTypes = getParameterTypes();
     Class<?>[] otherParameterTypes = other.getParameterTypes();
 
-    assert (thisParameterTypes.length == otherParameterTypes.length);
+    assert(thisParameterTypes.length == otherParameterTypes.length);
 
-    for (int i = 0; i < thisParameterTypes.length; i++) {
-      boolean moreSpecific =
-          otherParameterTypes[i].isAssignableFrom(thisParameterTypes[i]);
-      boolean lessSpecific =
-          thisParameterTypes[i].isAssignableFrom(otherParameterTypes[i]);
+    int diff = 0;
 
-      System.out.println("compareTo moreSpecific?"+moreSpecific+"\tlessSpecific?"+lessSpecific);
-
-      if (moreSpecific && lessSpecific) {
-        continue;
-      } else if (moreSpecific) {
-        // System.out.println("this is more specific on #" + i);
-        return -1;
-      } else if (lessSpecific) {
-        // System.out.println("this is less specific on #" + i);
-        return 1;
-      } else {
-        assert(false);
-      }
+    for (int i = 0; diff == 0 && i < thisParameterTypes.length; i++) {
+      diff = compareTypes(thisParameterTypes[i], otherParameterTypes[i]);
     }
 
-    System.out.println("Equally specific!!");
+    // if (diff == 0) {
+    //   System.out.println("GFMethod::compareTo - Equally specific!!");
+    // }
 
-    return 0;
+    return diff;
   }
 
-  private String parametersToString() {
-    return Arrays.stream(getParameterTypes()).map(Class::getSimpleName)
+  private static int compareTypes(Class<?> t1, Class<?> t2) {
+    boolean moreSpecific = t2.isAssignableFrom(t1);
+    boolean lessSpecific = t1.isAssignableFrom(t2);
+
+    // System.out.println("GFMethod::compareTypes - moreSpecific?" + moreSpecific +
+    //                    "\tlessSpecific?" + lessSpecific);
+
+    if (moreSpecific && !lessSpecific) {
+      // System.out.println("GFMethod::compareTypes - t1 is more specific on #" +
+      //                    i);
+      return -1;
+    } else if (lessSpecific && !moreSpecific) {
+      // System.out.println("GFMethod::compareTypes - t1 is less specific on #" +
+      //                    i);
+      return 1;
+    } else {
+      // System.out.println("hc "+t1.hashCode()+" "+t2.hashCode());
+
+      return t1.hashCode() - t2.hashCode();
+    }
+  }
+
+  private String debugParametersToString() {
+    return Arrays.stream(getParameterTypes())
+        .map(Class::getSimpleName)
         .collect(Collectors.joining(", "));
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    System.out.println("GFMethod::equals");
-    if (!(obj instanceof GFMethod)) {
-      return false;
-    }
-    if (obj == this) {
-      return true;
-    }
-
-    return Arrays.equals(getParameterTypes(), ((GFMethod)obj).getParameterTypes());
-  }
-
-  @Override
-  public int hashCode() {
-    System.out.println("GFMethod::hashCode");
-
-    return Arrays.hashCode(getParameterTypes());
   }
 }

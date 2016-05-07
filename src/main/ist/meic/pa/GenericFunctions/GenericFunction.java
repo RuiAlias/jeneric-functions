@@ -20,23 +20,23 @@ public class GenericFunction {
   }
 
   public void addMethod(GFMethod gfMethod) {
-    System.out.println("Vou fazer contains");
+    // System.out.println("Vou fazer contains");
     boolean contains = this.primaryMethods.contains(gfMethod);
-    System.out.println("Terminei contains");
+    // System.out.println("Terminei contains");
 
     if (contains) {
       this.primaryMethods.remove(gfMethod);
-      System.out.println("Actualizei o método");
+      // System.out.println("Actualizei o método");
     }
 
-    System.out.println("Vou adicionar");
+    // System.out.println("Vou adicionar");
     this.primaryMethods.add(gfMethod);
   }
 
   public void addBeforeMethod(GFMethod gfMethod) {
     if (this.beforeMethods.contains(gfMethod)) {
       this.beforeMethods.remove(gfMethod);
-      System.out.println("Actualizei o método");
+      // System.out.println("Actualizei o método");
     }
 
     this.beforeMethods.add(gfMethod);
@@ -45,7 +45,7 @@ public class GenericFunction {
   public void addAfterMethod(GFMethod gfMethod) {
     if (this.afterMethods.contains(gfMethod)) {
       this.afterMethods.remove(gfMethod);
-      System.out.println("Actualizei o método");
+      // System.out.println("Actualizei o método");
     }
 
     this.afterMethods.add(gfMethod);
@@ -54,19 +54,16 @@ public class GenericFunction {
   public Object call(Object... args) {
     beforeMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      // .sorted((gfm1, gfm2) -> gfm1.compareTo(gfm2))
       .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     Object bestMethodReturn = primaryMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
       .findFirst()
-      // .min((gfm1, gfm2) -> gfm1.compareTo(gfm2))
       .orElseThrow(() -> generateNoApplicableMethodsException(args))
       .dynamicCall(args);
 
     afterMethods.stream()
       .filter(gfm -> gfm.isApplicable(args))
-      // .sorted((gfm1, gfm2) -> -gfm1.compareTo(gfm2))
       .forEachOrdered((gfm) -> gfm.dynamicCall(args));
 
     return bestMethodReturn;
