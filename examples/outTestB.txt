@@ -1,0 +1,3 @@
+The number 123 is a integer (in hexadecimal, is 7b)
+Hi is a string
+The number 3.14159 is a number

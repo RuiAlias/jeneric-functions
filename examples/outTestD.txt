@@ -1,0 +1,8 @@
+4
+[5, 7, 9]
+Exception in thread "main" java.lang.IllegalArgumentException: 
+No methods for generic function add with args [[1, 2], 3]
+of classes [class [Ljava.lang.Object;, class java.lang.Integer]
+	at ist.meic.pa.GenericFunctions.GenericFunction.computeEffectiveMethod(GenericFunction.java:90)
+	at ist.meic.pa.GenericFunctions.GenericFunction.call(GenericFunction.java:99)
+	at TestD.main(TestD.java:25)

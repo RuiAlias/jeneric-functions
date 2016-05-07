@@ -13,6 +13,9 @@
   <property name="test.classes.dir" location="${build.dir}/test" />
   <property name="test.reports.dir" location="test-output" />
 
+  <property name="examples.src.dir" location="examples" />
+  <property name="examples.classes.dir" location="${build.dir}/examples" />
+
   <property name="imposed.project.name" value="genericFunctions" />
   <property name="normal.jar.name" value="${imposed.project.name}.jar" />
   <property name="extended.jar.name" value="${imposed.project.name}Extended.jar"
@@ -61,6 +64,14 @@
            destdir="${test.classes.dir}"
            includeantruntime="false">
       <classpath refid="test.compile.classpath" />
+    </javac>
+  </target>
+
+  <target name="compile-examples" depends="compile-main, init-examples">
+    <javac srcdir="${examples.src.dir}"
+           destdir="${examples.classes.dir}"
+           includeantruntime="false">
+      <classpath refid="classpath" />
     </javac>
   </target>
 
@@ -119,7 +130,8 @@
                    clean-release,
                    clean-jar,
                    clean-test,
-                   clean-test-reports">
+                   clean-test-reports,
+                   clean-examples">
     <delete dir="${build.dir}" />
     <delete dir="${dist.dir}" />
   </target>
@@ -167,5 +179,13 @@
 
   <target name="clean-test-reports">
     <delete dir="${test.reports.dir}" />
+  </target>
+
+  <target name="init-examples">
+    <mkdir dir="${examples.classes.dir}" />
+  </target>
+
+  <target name="clean-examples">
+    <delete dir="${examples.classes.dir}" />
   </target>
 </project>
