@@ -22,11 +22,11 @@ public class GFMethod implements Comparable<GFMethod> {
     return m;
   }
 
-  protected Class<?>[] getParameterTypes() {
+  public Class<?>[] getParameterTypes() {
     return getMethod().getParameterTypes();
   }
 
-  protected boolean isApplicable(Object... args) {
+  public boolean isApplicable(Object... args) {
     // System.out.println("isApplicable(" + Arrays.deepToString(args) + ")");
 
     Class<?>[] parameterTypes = getParameterTypes();
@@ -67,7 +67,7 @@ public class GFMethod implements Comparable<GFMethod> {
     return diff;
   }
 
-  private static int compareTypes(Class<?> t1, Class<?> t2) {
+  public static int compareTypes(Class<?> t1, Class<?> t2) {
     boolean moreSpecific = t2.isAssignableFrom(t1);
     boolean lessSpecific = t1.isAssignableFrom(t2);
 

@@ -30,23 +30,35 @@ public class GenericFunction {
   }
 
   public Object call(Object... args) {
-    beforeMethods.stream()
-        .filter(gfm -> gfm.isApplicable(args))
-        .forEachOrdered((gfm) -> gfm.dynamicCall(args));
+    callBefores(args);
 
-    Object bestMethodReturn = primaryMethods.stream()
-        .filter(gfm -> gfm.isApplicable(args)).findFirst()
-        .orElseThrow(() -> generateNoApplicableMethodsException(args))
-        .dynamicCall(args);
+    Object bestMethodReturn = callPrimary(args);
 
-    afterMethods.stream()
-        .filter(gfm -> gfm.isApplicable(args))
-        .forEachOrdered((gfm) -> gfm.dynamicCall(args));
+    callAfters(args);
 
     return bestMethodReturn;
   }
 
-  private IllegalArgumentException generateNoApplicableMethodsException(
+private Object callPrimary(Object... args) {
+	return primaryMethods.stream()
+        .filter(gfm -> gfm.isApplicable(args)).findFirst()
+        .orElseThrow(() -> generateNoApplicableMethodsException(args))
+        .dynamicCall(args);
+}
+
+private void callAfters(Object... args) {
+	afterMethods.stream()
+        .filter(gfm -> gfm.isApplicable(args))
+        .forEachOrdered(gfm -> gfm.dynamicCall(args));
+}
+
+private void callBefores(Object... args) {
+	beforeMethods.stream()
+        .filter(gfm -> gfm.isApplicable(args))
+        .forEachOrdered(gfm -> gfm.dynamicCall(args));
+}
+
+  protected IllegalArgumentException generateNoApplicableMethodsException(
       Object... args) {
     final String arguments = Arrays.deepToString(args);
     final String types = Arrays.deepToString(argsTypes(args));
@@ -56,7 +68,7 @@ public class GenericFunction {
     return new IllegalArgumentException(message);
   }
 
-  private static Class<?>[] argsTypes(Object[] args) {
+  protected static Class<?>[] argsTypes(Object[] args) {
     Class<?>[] types = new Class<?>[args.length];
 
     for (int i = 0; i < args.length; i++) {
