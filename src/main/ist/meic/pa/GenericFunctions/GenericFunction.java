@@ -1,62 +1,70 @@
 package ist.meic.pa.GenericFunctions;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 public class GenericFunction {
   final private String name;
-  private GFMSet primaryMethods;
-  private GFMSet beforeMethods;
-  private GFMSet afterMethods;
+  private Map<List<Class<?>>,GFMethod> primaryMethods;
+  private Map<List<Class<?>>,GFMethod> beforeMethods;
+  private Map<List<Class<?>>,GFMethod> afterMethods;
   private static final String NO_APPLICABLE_METHODS =
       "No methods for generic function %s with args %s of classes %s";
 
   public GenericFunction(String name) {
     this.name = name;
-    this.primaryMethods = new GFMSet();
-    this.beforeMethods = new GFMSet();
-    this.afterMethods = new GFMSet((gfm1, gfm2) -> -gfm1.compareTo(gfm2));
+    this.primaryMethods = new HashMap<List<Class<?>>,GFMethod>();
+    this.beforeMethods = new HashMap<List<Class<?>>,GFMethod>();
+    this.afterMethods = new HashMap<List<Class<?>>,GFMethod>();
   }
 
   public void addMethod(GFMethod gfm) {
-    this.primaryMethods.add(gfm);
+    List<Class<?>> params = Arrays.asList(gfm.getParameterTypes());
+    this.primaryMethods.put(params, gfm);
   }
 
   public void addBeforeMethod(GFMethod gfm) {
-    this.beforeMethods.add(gfm);
+    List<Class<?>> params = Arrays.asList(gfm.getParameterTypes());
+    this.beforeMethods.put(params, gfm);
   }
 
   public void addAfterMethod(GFMethod gfm) {
-    this.afterMethods.add(gfm);
+    List<Class<?>> params = Arrays.asList(gfm.getParameterTypes());
+    this.afterMethods.put(params, gfm);
   }
 
   public Object call(Object... args) {
     callBefores(args);
-
     Object bestMethodReturn = callPrimary(args);
-
     callAfters(args);
 
     return bestMethodReturn;
   }
 
-private Object callPrimary(Object... args) {
-	return primaryMethods.stream()
-        .filter(gfm -> gfm.isApplicable(args)).findFirst()
+  private Object callPrimary(Object... args) {
+    return primaryMethods.values().stream()
+        .filter(gfm -> gfm.isApplicable(args))
+        .sorted()
+        .findFirst()
         .orElseThrow(() -> generateNoApplicableMethodsException(args))
         .dynamicCall(args);
-}
+  }
 
-private void callAfters(Object... args) {
-	afterMethods.stream()
-        .filter(gfm -> gfm.isApplicable(args))
-        .forEachOrdered(gfm -> gfm.dynamicCall(args));
-}
+  private void callBefores(Object... args) {
+    beforeMethods.values().stream()
+      .filter(gfm -> gfm.isApplicable(args))
+      .sorted()
+      .forEachOrdered(gfm -> gfm.dynamicCall(args));
+  }
 
-private void callBefores(Object... args) {
-	beforeMethods.stream()
+  private void callAfters(Object... args) {
+    afterMethods.values().stream()
         .filter(gfm -> gfm.isApplicable(args))
+        .sorted((gfm1, gfm2) -> -gfm1.compareTo(gfm2))
         .forEachOrdered(gfm -> gfm.dynamicCall(args));
-}
+  }
 
   protected IllegalArgumentException generateNoApplicableMethodsException(
       Object... args) {
