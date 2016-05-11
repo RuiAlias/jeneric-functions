@@ -46,13 +46,12 @@ public class GFMethod implements Comparable<GFMethod> {
 
   @Override
   public int compareTo(GFMethod other) {
-    // System.out.println("GFMethod::compareTo - this(" + debugParametersToString()
-    //                    + ")\tother(" + other.debugParametersToString() + ")");
+    // System.out.println("GFMethod::compareTo - this(" + debugParametersToString()+")\tother(" + other.debugParametersToString() + ")");
 
     Class<?>[] thisParameterTypes = getParameterTypes();
     Class<?>[] otherParameterTypes = other.getParameterTypes();
 
-    assert(thisParameterTypes.length == otherParameterTypes.length);
+    assert (thisParameterTypes.length == otherParameterTypes.length);
 
     int diff = 0;
 

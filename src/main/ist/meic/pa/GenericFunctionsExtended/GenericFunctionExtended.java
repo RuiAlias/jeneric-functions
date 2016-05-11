@@ -2,95 +2,72 @@ package ist.meic.pa.GenericFunctionsExtended;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
+import ist.meic.pa.GenericFunctions.GFMContainer;
+import ist.meic.pa.GenericFunctions.SimplifiedSMC;
 
-public class GenericFunctionExtended {
-	private HashMap<List<Class<?>>, GFMethodExtended> cache;
-	private static final String NO_APPLICABLE_METHODS =
-		      "No methods for generic function %s with args %s of classes %s";
-	private String name;
-	private GFMSetExtended primaryMethods;
-	private GFMSetExtended beforeMethods;
-	private GFMSetExtended afterMethods;
+public class GenericFunctionExtended extends SimplifiedSMC<GFMethodExtended> {
+  private Map<List<Class<?>>, GFMethodExtended> primaryMethodCache;
 
-	public GenericFunctionExtended(String name) {
-		this.name = name;
-		this.cache = new HashMap<List<Class<?>>, GFMethodExtended>();
-		primaryMethods = new GFMSetExtended((gfm1, gfm2) -> gfm1.compareToRightLeft(gfm2));
-		beforeMethods = new GFMSetExtended((gfm1, gfm2) -> gfm1.compareToRightLeft(gfm2));
-		afterMethods = new GFMSetExtended((gfm1, gfm2) -> -gfm1.compareToRightLeft(gfm2));
-	}
+  public GenericFunctionExtended(String name) {
+    super(name);
+    this.primaryMethodCache = new HashMap<List<Class<?>>, GFMethodExtended>();
+  }
 
-	public void addMethod(GFMethodExtended gfm) {
-		cache.clear();
-		this.primaryMethods.add(gfm);
-	}
+  @Override
+  protected GFMContainer<GFMethodExtended> createGFMContainer(boolean after) {
+    if (!after) {
+      return new GFMSortedSet<GFMethodExtended>(
+          (gfm1, gfm2) -> gfm1.compareToRightLeft(gfm2));
+    } else {
+      return new GFMSortedSet<GFMethodExtended>(
+          (gfm1, gfm2) -> -gfm1.compareToRightLeft(gfm2));
+    }
+  }
 
-	public void addBeforeMethod(GFMethodExtended gfm) {
-		this.beforeMethods.add(gfm);
-	}
+  @Override
+  public void addMethod(GFMethodExtended gfm) {
+    primaryMethodCache.clear();
+    super.addMethod(gfm);
+  }
 
-	public void addAfterMethod(GFMethodExtended gfm) {
-		this.afterMethods.add(gfm);
-	}
+  @Override
+  protected Optional<GFMethodExtended> getPrimary(Object[] args) {
+    List<Class<?>> types = Arrays.asList(argsTypes(args));
 
-	public Object call(Object... args) {
-	    callBefores(args);
+    GFMethodExtended primaryMethod;
 
-	    Object bestMethodReturn = callPrimary(args);
+    if (primaryMethodCache.containsKey(types)) {
+      primaryMethod = primaryMethodCache.get(types);
+    } else {
+      primaryMethod = primaryMethods.stream()
+          .filter(gfm -> gfm.isApplicable(args)).findFirst()
+          .orElseThrow(() -> generateNoApplicableMethodsException(args));
 
-	    callAfters(args);
+      insertIntoCache(primaryMethod, types);
+    }
 
-	    return bestMethodReturn;
-	  }
+    return Optional.of(primaryMethod);
+  }
 
-	private void callAfters(Object... args) {
-		afterMethods.stream()
-	        .filter(gfm -> gfm.isApplicable(args))
-	        .forEachOrdered(gfm -> gfm.dynamicCall(args));
-	}
+  @Override
+  protected Stream<GFMethodExtended> getBefores(Object[] args) {
+    return beforeMethods.stream().filter(gfm -> gfm.isApplicable(args));
+  }
 
-	private void callBefores(Object... args) {
-		beforeMethods.stream()
-	        .filter(gfm -> gfm.isApplicable(args))
-	        .forEachOrdered(gfm -> gfm.dynamicCall(args));
-	}
-	
-	private Object callPrimary(Object... args) {
-		List<Class<?>> types = Arrays.asList(argsTypes(args));
+  @Override
+  protected Stream<GFMethodExtended> getAfters(Object[] args) {
+    return afterMethods.stream().filter(gfm -> gfm.isApplicable(args));
+  }
 
-		GFMethodExtended effective = null;
-		if (cache.containsKey(types)) {
-			effective = cache.get(types);
-		} else {
-			effective = primaryMethods.stream().filter(gfm -> gfm.isApplicable(args)).findFirst()
-					.orElseThrow(() -> generateNoApplicableMethodsException(args));
-			insertIntoCache(effective, types);
-		}
-		return effective.dynamicCall(args);
-	}
-
-	private void insertIntoCache(GFMethodExtended effective, List<Class<?>> types) {
-		cache.put(Collections.unmodifiableList(types), effective);
-	}
-
-	protected IllegalArgumentException generateNoApplicableMethodsException(Object... args) {
-		final String arguments = Arrays.deepToString(args);
-		final String types = Arrays.deepToString(argsTypes(args));
-		final String message = String.format(NO_APPLICABLE_METHODS, this.name, arguments, types);
-
-		return new IllegalArgumentException(message);
-	}
-
-	protected static Class<?>[] argsTypes(Object[] args) {
-		Class<?>[] types = new Class<?>[args.length];
-
-		for (int i = 0; i < args.length; i++) {
-			types[i] = args[i].getClass();
-		}
-
-		return types;
-	}
+  private void insertIntoCache(GFMethodExtended primaryMethod,
+      List<Class<?>> types) {
+    primaryMethodCache.put(Collections.unmodifiableList(types), primaryMethod);
+  }
 }

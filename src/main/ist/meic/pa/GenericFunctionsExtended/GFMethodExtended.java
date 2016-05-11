@@ -2,21 +2,19 @@ package ist.meic.pa.GenericFunctionsExtended;
 
 import ist.meic.pa.GenericFunctions.GFMethod;
 
-public class GFMethodExtended extends GFMethod{
-  
-  public int compareToRightLeft(GFMethod other) {
+public class GFMethodExtended extends GFMethod {
+  public int compareToRightLeft(GFMethodExtended other) {
+    Class<?>[] thisParameterTypes = getParameterTypes();
+    Class<?>[] otherParameterTypes = other.getParameterTypes();
 
-	    Class<?>[] thisParameterTypes = getParameterTypes();
-	    Class<?>[] otherParameterTypes = other.getParameterTypes();
+    assert (thisParameterTypes.length == otherParameterTypes.length);
 
-	    assert(thisParameterTypes.length == otherParameterTypes.length);
+    int diff = 0;
 
-	    int diff = 0;
+    for (int i = thisParameterTypes.length - 1; diff == 0 && i >= 0; i--) {
+      diff = compareTypes(thisParameterTypes[i], otherParameterTypes[i]);
+    }
 
-	    
-	    for (int i = thisParameterTypes.length - 1; diff == 0 && i >= 0; i--) {
-	      diff = compareTypes(thisParameterTypes[i], otherParameterTypes[i]);
-	    }
-	    return diff;
-	  }
+    return diff;
+  }
 }
