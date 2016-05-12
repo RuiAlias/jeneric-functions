@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class GFMMap<E extends GFMethod> implements GFMContainer<E> {
+public class GFMUnsortedContainer<E extends GFMethod> implements GFMContainer<E> {
   private Map<List<Class<?>>, E> methods;
 
-  public GFMMap() {
+  public GFMUnsortedContainer() {
     this.methods = new HashMap<List<Class<?>>, E>();
   }
 

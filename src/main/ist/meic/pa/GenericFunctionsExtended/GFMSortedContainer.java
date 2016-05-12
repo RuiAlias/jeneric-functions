@@ -8,14 +8,14 @@ import java.util.stream.Stream;
 import ist.meic.pa.GenericFunctions.GFMContainer;
 import ist.meic.pa.GenericFunctions.GFMethod;
 
-public class GFMSortedSet<E extends GFMethod> implements GFMContainer<E> {
+public class GFMSortedContainer<E extends GFMethod> implements GFMContainer<E> {
   private SortedSet<E> methods;
 
-  public GFMSortedSet() {
+  public GFMSortedContainer() {
     this.methods = new TreeSet<E>();
   }
 
-  public GFMSortedSet(Comparator<E> comparator) {
+  public GFMSortedContainer(Comparator<E> comparator) {
     this.methods = new TreeSet<E>(comparator);
   }
 

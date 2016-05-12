@@ -23,10 +23,10 @@ public class GenericFunctionExtended extends SimplifiedSMC<GFMethodExtended> {
   @Override
   protected GFMContainer<GFMethodExtended> createGFMContainer(boolean after) {
     if (!after) {
-      return new GFMSortedSet<GFMethodExtended>(
+      return new GFMSortedContainer<GFMethodExtended>(
           (gfm1, gfm2) -> gfm1.compareToRightLeft(gfm2));
     } else {
-      return new GFMSortedSet<GFMethodExtended>(
+      return new GFMSortedContainer<GFMethodExtended>(
           (gfm1, gfm2) -> -gfm1.compareToRightLeft(gfm2));
     }
   }
