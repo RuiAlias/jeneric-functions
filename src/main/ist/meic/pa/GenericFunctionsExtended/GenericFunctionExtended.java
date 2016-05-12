@@ -38,7 +38,7 @@ public class GenericFunctionExtended extends SimplifiedSMC<GFMethodExtended> {
   }
 
   @Override
-  protected Optional<GFMethodExtended> getPrimary(Object[] args) {
+  protected Optional<GFMethodExtended> getApplicablePrimary(Object[] args) {
     List<Class<?>> types = Arrays.asList(argsTypes(args));
 
     GFMethodExtended primaryMethod;
@@ -57,12 +57,12 @@ public class GenericFunctionExtended extends SimplifiedSMC<GFMethodExtended> {
   }
 
   @Override
-  protected Stream<GFMethodExtended> getBefores(Object[] args) {
+  protected Stream<GFMethodExtended> getApplicableBefores(Object[] args) {
     return beforeMethods.stream().filter(gfm -> gfm.isApplicable(args));
   }
 
   @Override
-  protected Stream<GFMethodExtended> getAfters(Object[] args) {
+  protected Stream<GFMethodExtended> getApplicableAfters(Object[] args) {
     return afterMethods.stream().filter(gfm -> gfm.isApplicable(args));
   }
 

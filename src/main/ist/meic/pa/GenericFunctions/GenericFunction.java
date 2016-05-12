@@ -15,7 +15,7 @@ public class GenericFunction extends SimplifiedSMC<GFMethod> {
   }
 
   @Override
-  protected Optional<GFMethod> getPrimary(Object[] args) {
+  protected Optional<GFMethod> getApplicablePrimary(Object[] args) {
     return primaryMethods.stream()
         .filter(gfm -> gfm.isApplicable(args))
         .sorted()
@@ -23,14 +23,14 @@ public class GenericFunction extends SimplifiedSMC<GFMethod> {
   }
 
   @Override
-  protected Stream<GFMethod> getBefores(Object[] args) {
+  protected Stream<GFMethod> getApplicableBefores(Object[] args) {
     return beforeMethods.stream()
         .filter(gfm -> gfm.isApplicable(args))
         .sorted();
   }
 
   @Override
-  protected Stream<GFMethod> getAfters(Object[] args) {
+  protected Stream<GFMethod> getApplicableAfters(Object[] args) {
     return afterMethods.stream()
         .filter(gfm -> gfm.isApplicable(args))
         .sorted((gfm1, gfm2) -> -gfm1.compareTo(gfm2));

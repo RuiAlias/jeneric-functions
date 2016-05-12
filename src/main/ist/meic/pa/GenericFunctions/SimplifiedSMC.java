@@ -38,24 +38,24 @@ public abstract class SimplifiedSMC<T extends GFMethod>
 
   abstract protected GFMContainer<T> createGFMContainer(boolean after);
 
-  abstract protected Optional<T> getPrimary(Object[] args);
+  abstract protected Optional<T> getApplicablePrimary(Object[] args);
 
-  abstract protected Stream<T> getBefores(Object[] args);
+  abstract protected Stream<T> getApplicableBefores(Object[] args);
 
-  abstract protected Stream<T> getAfters(Object[] args);
+  abstract protected Stream<T> getApplicableAfters(Object[] args);
 
   private Object callPrimary(Object[] args) {
-    return getPrimary(args)
+    return getApplicablePrimary(args)
         .orElseThrow(() -> generateNoApplicableMethodsException(args))
         .dynamicCall(args);
   }
 
   private void callBefores(Object[] args) {
-    callOrdered(getBefores(args), args);
+    callOrdered(getApplicableBefores(args), args);
   }
 
   private void callAfters(Object[] args) {
-    callOrdered(getAfters(args), args);
+    callOrdered(getApplicableAfters(args), args);
   }
 
   private void callOrdered(Stream<T> orderedMethods, Object[] args) {
