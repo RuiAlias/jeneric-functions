@@ -29,8 +29,11 @@ public abstract class SimplifiedSMC<T extends GFMethod>
   }
 
   public Object call(Object... args) {
+    GFMethod primary = getApplicablePrimary(args)
+      .orElseThrow(() -> generateNoApplicableMethodsException(args));
+
     callBefores(args);
-    Object bestMethodReturn = callPrimary(args);
+    Object bestMethodReturn = primary.dynamicCall(args);
     callAfters(args);
 
     return bestMethodReturn;
@@ -43,12 +46,6 @@ public abstract class SimplifiedSMC<T extends GFMethod>
   abstract protected Stream<T> getApplicableBefores(Object[] args);
 
   abstract protected Stream<T> getApplicableAfters(Object[] args);
-
-  private Object callPrimary(Object[] args) {
-    return getApplicablePrimary(args)
-        .orElseThrow(() -> generateNoApplicableMethodsException(args))
-        .dynamicCall(args);
-  }
 
   private void callBefores(Object[] args) {
     callOrdered(getApplicableBefores(args), args);
