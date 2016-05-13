@@ -66,7 +66,7 @@ public class GFMethod implements Comparable<GFMethod> {
     return diff;
   }
 
-  public static int compareTypes(Class<?> t1, Class<?> t2) {
+  private static int compareTypes(Class<?> t1, Class<?> t2) {
     boolean moreSpecific = t2.isAssignableFrom(t1);
     boolean lessSpecific = t1.isAssignableFrom(t2);
 
