@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import ist.meic.pa.test.*;
+
 public class GenericFunctionTest {
   @Test
   public void genericFunctionHasName() {

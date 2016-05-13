@@ -1,7 +1,10 @@
 package ist.meic.pa.GenericFunctions;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
+
+import ist.meic.pa.test.*;
 
 public class GFMethodTest {
   @Test

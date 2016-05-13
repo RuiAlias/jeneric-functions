@@ -3,6 +3,8 @@ package ist.meic.pa.GenericFunctionsExtended;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import ist.meic.pa.test.*;
+
 public class GFMethodExtendedTest {
   @Test
   public void choosingTheMostSpecificMethod1() {
