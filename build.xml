@@ -26,7 +26,7 @@
   />
 
   <property name="release.zip" value="project.zip" />
-  <property name="zip.prefix.dir" value="g05" />
+  <property name="zip.dir.prefix" value="g05" />
   <property name="slides.pdf" location="p2.pdf" />
 
 
@@ -97,10 +97,9 @@
 
   <target name="release">
     <zip destfile="${release.zip}">
-      <zipfileset dir="." includes="lib/**/*" prefix="${zip.prefix.dir}" />
-      <zipfileset dir="." includes="src/**/*" prefix="${zip.prefix.dir}" />
-      <zipfileset dir="." includes="build.xml" prefix="${zip.prefix.dir}" />
-      <zipfileset dir="." includes="${slides.pdf}" prefix="${zip.prefix.dir}" />
+      <zipfileset dir="." includes="src/main/**/*" prefix="${zip.dir.prefix}" />
+      <zipfileset dir="." includes="build.xml" prefix="${zip.dir.prefix}" />
+      <zipfileset dir="." includes="${slides.pdf}" prefix="${zip.dir.prefix}" />
     </zip>
   </target>
 
