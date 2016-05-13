@@ -47,7 +47,8 @@ public class GenericFunctionExtended extends SimplifiedSMC<GFMethodExtended> {
       primaryMethod = primaryMethodCache.get(types);
     } else {
       primaryMethod = primaryMethods.stream()
-          .filter(gfm -> gfm.isApplicable(args)).findFirst()
+          .filter(gfm -> gfm.isApplicable(args))
+          .findFirst()
           .orElseThrow(() -> generateNoApplicableMethodsException(args));
 
       insertIntoCache(primaryMethod, types);

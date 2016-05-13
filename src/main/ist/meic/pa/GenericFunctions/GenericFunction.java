@@ -9,8 +9,7 @@ public class GenericFunction extends SimplifiedSMC<GFMethod> {
   }
 
   @Override
-  protected GFMContainer<GFMethod> createGFMContainer(
-      boolean after) {
+  protected GFMContainer<GFMethod> createGFMContainer(boolean after) {
     return new GFMUnsortedContainer<GFMethod>();
   }
 

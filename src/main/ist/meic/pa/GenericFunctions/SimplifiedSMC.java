@@ -30,7 +30,7 @@ public abstract class SimplifiedSMC<T extends GFMethod>
 
   public Object call(Object... args) {
     GFMethod primary = getApplicablePrimary(args)
-      .orElseThrow(() -> generateNoApplicableMethodsException(args));
+        .orElseThrow(() -> generateNoApplicableMethodsException(args));
 
     callBefores(args);
     Object bestMethodReturn = primary.dynamicCall(args);
