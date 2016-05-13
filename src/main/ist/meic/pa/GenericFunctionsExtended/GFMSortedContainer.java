@@ -8,6 +8,9 @@ import java.util.stream.Stream;
 import ist.meic.pa.GenericFunctions.GFMContainer;
 import ist.meic.pa.GenericFunctions.GFMethod;
 
+/**
+ * GFMContainer implementation using a TreeSet to store the methods.
+ */
 public class GFMSortedContainer<E extends GFMethod> implements GFMContainer<E> {
   private SortedSet<E> methods;
 

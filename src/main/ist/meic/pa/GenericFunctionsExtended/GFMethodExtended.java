@@ -2,6 +2,12 @@ package ist.meic.pa.GenericFunctionsExtended;
 
 import ist.meic.pa.GenericFunctions.GFMethod;
 
+/**
+ * Contains the reflection mechanisms to fetch and invoke the method call() at
+ * runtime. Implements the comparison between 2 GFMethods. Implements the
+ * applicability criteria given 1 or more arguments. Also defines a new
+ * comparator.
+ */
 public class GFMethodExtended extends GFMethod {
   public int compareToRightLeft(GFMethodExtended other) {
     Class<?>[] thisParameterTypes = getParameterTypes();

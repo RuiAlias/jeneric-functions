@@ -3,6 +3,10 @@ package ist.meic.pa.GenericFunctions;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * SimplifiedSMC implementation using UnsortedContainers as data structures. For
+ * every call() filters and then sorts the resulting methods.
+ */
 public class GenericFunction extends SimplifiedSMC<GFMethod> {
   public GenericFunction(String name) {
     super(name);

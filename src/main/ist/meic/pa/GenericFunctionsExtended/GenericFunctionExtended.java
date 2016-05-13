@@ -11,6 +11,10 @@ import java.util.stream.Stream;
 import ist.meic.pa.GenericFunctions.GFMContainer;
 import ist.meic.pa.GenericFunctions.SimplifiedSMC;
 
+/**
+ * SimplifiedSMC implementation using SortedContainers as data structures. For
+ * every call() filters the methods.
+ */
 public class GenericFunctionExtended extends SimplifiedSMC<GFMethodExtended> {
   private Map<List<Class<?>>, GFMethodExtended> primaryMethodCache;
 

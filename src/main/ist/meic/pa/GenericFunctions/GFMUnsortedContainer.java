@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+/**
+ * GFMContainer implementation using an HashMap to store the methods.
+ */
 public class GFMUnsortedContainer<E extends GFMethod>
     implements GFMContainer<E> {
   private Map<List<Class<?>>, E> methods;

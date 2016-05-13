@@ -3,6 +3,11 @@ package ist.meic.pa.GenericFunctions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Contains the reflection mechanisms to fetch and invoke the method call() at
+ * runtime. Implements the comparison between 2 GFMethods. Implements the
+ * applicability criteria given 1 or more arguments.
+ */
 public class GFMethod implements Comparable<GFMethod> {
   public Object dynamicCall(Object... args) {
     try {

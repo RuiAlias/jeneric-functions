@@ -2,6 +2,9 @@ package ist.meic.pa.GenericFunctions;
 
 import java.util.Arrays;
 
+/**
+ * Stores the genericFunction's name and generates the IllegalArgumentException.
+ */
 public abstract class AbstractGenericFunction {
   private final String name;
   private static final String NO_APPLICABLE_METHODS =

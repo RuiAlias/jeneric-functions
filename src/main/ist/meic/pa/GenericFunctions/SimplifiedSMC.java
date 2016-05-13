@@ -3,6 +3,10 @@ package ist.meic.pa.GenericFunctions;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Defines the method combination protocol and stores the primary, before and
+ * after methods.
+ */
 public abstract class SimplifiedSMC<T extends GFMethod>
     extends AbstractGenericFunction {
   protected GFMContainer<T> primaryMethods;
