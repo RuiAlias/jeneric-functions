@@ -82,9 +82,7 @@ public class GFMethod implements Comparable<GFMethod> {
       //                    i);
       return 1;
     } else {
-      // System.out.println("hc "+t1.hashCode()+" "+t2.hashCode());
-
-      return t1.hashCode() - t2.hashCode();
+      return 0;
     }
   }
 

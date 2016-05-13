@@ -57,7 +57,7 @@ public class GFMethodTest {
   }
 
   @Test
-  public void shouldReturnDifferentWhenMethodsAreUnrelated1() {
+  public void shouldReturn0WhenMethodsAreUnrelated1() {
     GFMethod gfm1 = new GFMethod() {
         public Object call(Object o, A a, C c) {
           return null;
@@ -70,11 +70,12 @@ public class GFMethodTest {
         }
       };
 
-    testUnrelatedMethods(gfm1, gfm2);
+    assertEquals(0, gfm1.compareTo(gfm2));
+    assertEquals(0, gfm2.compareTo(gfm1));
   }
 
   @Test
-  public void shouldReturnDifferentWhenMethodsAreUnrelated2() {
+  public void shouldReturn0WhenMethodsAreUnrelated2() {
     GFMethod gfm1 = new GFMethod() {
         public Object call(Integer a, Integer b) {
           return a + b;
@@ -87,7 +88,8 @@ public class GFMethodTest {
         }
       };
 
-    testUnrelatedMethods(gfm1, gfm2);
+    assertEquals(0, gfm1.compareTo(gfm2));
+    assertEquals(0, gfm2.compareTo(gfm1));
   }
 
   @Test
@@ -99,20 +101,5 @@ public class GFMethodTest {
       };
 
     assertEquals(0, gfm1.compareTo(gfm1));
-  }
-
-
-  private void testUnrelatedMethods(GFMethod gfm1, GFMethod gfm2) {
-    int diff1 = gfm1.compareTo(gfm2);
-    int diff2 = gfm2.compareTo(gfm1);
-
-    assertNotEquals(0, diff1);
-    assertNotEquals(0, diff2);
-
-    if (diff1 > 0) {
-      assertTrue(diff2 < 0);
-    } else {
-      assertTrue(diff2 > 0);
-    }
   }
 }
