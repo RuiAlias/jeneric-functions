@@ -22,19 +22,11 @@ public class GFMethodExtended extends GFMethod {
     boolean moreSpecific = t2.isAssignableFrom(t1);
     boolean lessSpecific = t1.isAssignableFrom(t2);
 
-    // System.out.println("GFMethod::compareTypes - moreSpecific?" + moreSpecific +
-    //                    "\tlessSpecific?" + lessSpecific);
-
     if (moreSpecific && !lessSpecific) {
-      // System.out.println("GFMethod::compareTypes - t1 is more specific on #" +
-      //                    i);
       return -1;
     } else if (lessSpecific && !moreSpecific) {
-      // System.out.println("GFMethod::compareTypes - t1 is less specific on #" +
-      //                    i);
       return 1;
     } else {
-      // System.out.println("hc "+t1.hashCode()+" "+t2.hashCode());
       return t1.hashCode() - t2.hashCode();
     }
   }
